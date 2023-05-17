@@ -9,7 +9,7 @@ log_config = {
 
 db_config = {
     "host": "mysql",
-    "port": 3306,
+    "port": 3307,
     "user": "root",
     "password": "huya123456",
     "database": "huya",
