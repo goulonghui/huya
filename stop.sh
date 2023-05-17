@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose -f /Users/lhuigou/project/huya/docker/docker-compose.yaml down
+docker-compose -f /root/docker-compose.yaml down
