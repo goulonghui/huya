@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Upload</title>
+</head>
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+  th, td {
+    padding: 15px;
+    text-align: left;
+  }
+  td {
+    word-wrap: break-word; /* 自动换行 */
+    word-break: break-all; /* 强制换行 */
+  }
+</style>
+<body>
+    <h1>任务当前配置，点击最右边edit编辑配置</h1>
+    <h2>编辑task_interval_minutes配置后，定时任务会重启</h2>
+    <table style="text-align: center;">
+        <tr>
+            <th>configKey</th>
+            <th>configValue</th>
+            <th>configDesc</th>
+            <th>Action</th>
+        </tr>
+        {% for config in configs %}
+        <tr>
+            <td>{{ config.configKey }}</td>
+            <td>{{ config.configValue }}</td>
+            <td>{{ config.configDesc }}</td>
+            <td><a href="{{ url_for('edit_config', config_id=config.id) }}">edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>上传Excel批量导入虎牙user_id</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xls,.xlsx">
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

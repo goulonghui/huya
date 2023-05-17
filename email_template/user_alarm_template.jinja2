@@ -1,0 +1,48 @@
+<h3>请注意：以下账号异常！！！</h3>
+<h3>详细信息：</h3>
+ <table>
+        <tr style="background-color: rgb(123, 129, 132); color: white">
+            <td>用户ID</td>
+            <td>原因</td>
+        </tr>
+     {% for user_info in user_infos %}
+        <tr>
+            <td>{{ user_info.user_id }}</td>
+            <td>{{ user_info.desc }}</td>
+        </tr>
+     {% endfor %}
+ </table>
+
+
+<style>
+    h3 {
+        padding-top: 5px;
+    }
+    table {
+        border-collapse: collapse;
+    }
+
+    table, td, th {
+        border: 1px solid rgb(234, 234, 234);
+        text-align: left;
+        padding: 5px;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

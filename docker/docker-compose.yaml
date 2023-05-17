@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: huya123456
+      MYSQL_DATABASE: huya
+    ports:
+      - "3306:3306"
+
+  app:
+    image: mrglh/huya_app:0.1
+    restart: always
+    depends_on:
+      - mysql
+    volumes:
+      - /data/log:/data/log
+    ports:
+      - "5000:5000"
