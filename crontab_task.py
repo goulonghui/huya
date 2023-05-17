@@ -2,12 +2,13 @@
 
 # Created on 2023/5/13.
 import os
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 from pytz import timezone
 
-from common import logger
 from common import config
 from common import db
+from common import logger
 from query_huya_appeal import tick
 
 

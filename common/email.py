@@ -14,14 +14,6 @@ from common import logger
 
 class EmailSender:
 
-    # host = os.getenv("email_server_host", "smtp.zshield.net")
-    # port = os.getenv("email_server_port", 25)
-    # user = os.getenv("send_user_email", "xszhang@zshield.net")
-    # pwd = os.getenv("send_user_email_pwd", "!QAZ2wsx")
-    # from_mail = os.getenv("send_user_email", "xszhang@zshield.net")
-    # # to_mail = os.getenv("to_mail", "sensor_system@zshield.net")
-    # to_mail = os.getenv("to_mail", "sensor-squad@zshield.net")
-
     def __init__(self, server_host, server_port, sender, sender_authorization_code, receivers):
         self.server_host = server_host
         self.server_port = server_port
