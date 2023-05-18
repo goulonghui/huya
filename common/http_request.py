@@ -25,8 +25,9 @@ def post_request_from_json(url, data, proxies=None):
             "http": proxies,
             "https": proxies
         }
-        logger.log_info(f"request use proxy: {proxies}")
-    logger.log_debug(f"curl {url} -d '{json.dumps(data)}'")
+        logger.log_debug(f"curl {url} --proxy {proxies} -d '{json.dumps(data)}'")
+    else:
+        logger.log_debug(f"curl {url} -d '{json.dumps(data)}'")
     response = requests.post(**kwargs)
     code, content = response.status_code, response.content.decode('utf-8')
     logger.log_debug(f"response: code:{code}, content: {content}")

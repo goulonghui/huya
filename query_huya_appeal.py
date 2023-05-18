@@ -7,6 +7,8 @@ import json
 import os
 import traceback
 
+import requests
+
 from common import db, http_request, logger
 from common import email
 from common.config import email_config
@@ -50,7 +52,7 @@ class HuYa:
         })
         logger.log_info(f"email_config: {email_config}")
 
-    @http_request.retry(times=3)
+    @http_request.retry(times=3, delay_interval=10)
     def request_proxy(self, proxy_url):
         """
         {
@@ -91,7 +93,7 @@ class HuYa:
         if not data:
             logger.log_error(f"proxy not working !!!, check proxy: {proxy_url}")
             self.alarm_proxy_not_working(proxy_url)
-            return
+            raise RuntimeError("proxy not working !!!")
         self.proxies = [f"{_['ip']}:{_['port']}" for _ in data]
         logger.log_info(f"get proxy finish, proxies: {self.proxies}")
 
@@ -110,35 +112,48 @@ class HuYa:
                 (self.last_alarm_proxy_time + datetime.timedelta(minutes=self.alarm_proxy_interval)):
             send()
 
+    def request_huya_use_proxy(self, huya_url, request_data):
+        while True:
+            if not self.proxies:
+                self.get_proxies()
+            if self.proxies:
+                self.current_proxy = self.current_proxy or self.proxies.pop()
+                try:
+                    code, content = http_request.post_request_from_json(
+                        huya_url, request_data, proxies=self.current_proxy
+                    )
+                except requests.exceptions.ProxyError:
+                    logger.log_warning(f"this proxy {self.current_proxy} not work, will replace!")
+                    self.current_proxy = None
+                    continue
+                if code != 200:
+                    return False
+                content = json.loads(content)
+                if "returnCode" not in content:
+                    return False
+                if content["returnCode"] in self.huya_code["need_proxy"]:
+                    self.current_proxy = None
+                    continue
+                return content
+            else:
+                logger.log_warning("no proxy available!!!")
+                return False
+
     def request_huya_appeal(self, huya_url, request_data):
         if self.current_proxy:
-            code, content = http_request.post_request_from_json(huya_url, request_data, self.current_proxy)
+            return self.request_huya_use_proxy(huya_url, request_data)
         else:
             code, content = http_request.post_request_from_json(huya_url, request_data)
         if code != 200:
             return False
         content = json.loads(content)
+
         if "returnCode" not in content:
             return False
+
         if content["returnCode"] in self.huya_code["need_proxy"]:
-            while True:
-                if not self.proxies:
-                    self.get_proxies()
-                if self.proxies:
-                    self.current_proxy = self.proxies.pop()
-                    # proxy = self.proxies.pop()
-                    code, content = http_request.post_request_from_json(huya_url, request_data, proxies=self.current_proxy)
-                    if code != 200:
-                        return False
-                    content = json.loads(content)
-                    if "returnCode" not in content:
-                        return False
-                    if content["returnCode"] in self.huya_code["need_proxy"]:
-                        continue
-                    return content
-                else:
-                    logger.log_warning("no proxy available!!!")
-                    return False
+            return self.request_huya_use_proxy(huya_url, request_data)
+
         return content
 
     def query_huya_appeal(self):
@@ -184,7 +199,7 @@ class HuYa:
             body = {
                 "uri": 0,
                 "data": {
-                    "user": user_d["user_id"]
+                    "user": user_d["user_id"].strip()
                 }
             }
             data = None
@@ -218,7 +233,7 @@ def tick():
         HuYa().query_huya_appeal()
     except Exception as ex:
         logger.log_error(f"InternalError ex: {ex}")
-        logger.log_error(f"traceback: {traceback.format_exc()}")
+        logger.log_error(f"traceback: {str(traceback.format_exc())}")
 
 
 

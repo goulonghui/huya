@@ -74,20 +74,43 @@ def read_xls():
     return ["113550119"]
 
 #
+
+
+
+kwargs = {
+    'url': 'https://udbsec.huya.com/web/appeal/launch',
+    'json': {'uri': 0, 'data': {'user': '11996070'}},
+    'proxies': {
+        'http': 'http://183.162.226.248:35917',
+        'https': 'https://183.162.226.248:35917'
+    }
+}
 proxies = {
-    'http': '183.162.226.250:40345',
-    'https': '183.162.226.250:40345',
+    'http': '183.162.226.243:44082',
+    'https': '183.162.226.243:44082',
 }
 
 
 def request_post(_url, body):
-    print("body:", body)
+    # print("body:", body)
     # time.sleep(1)
     # proxies = {
     #     'http': 'http://egon:123@localhost:9743',
     #     'https': 'https://localhost:9743',
     # }
-    response = requests.post(url=_url, json=body, proxies=proxies)
+    body = {'uri': 0, 'data': {'user': '11996070'}}
+    print("body:", body)
+    try:
+        response = requests.post(url=_url, json=body, proxies=proxies)
+        # response = requests.post(**kwargs)
+    # except requests.exceptions.ProxyError:
+    #     print(666666666)
+    #     return
+    except Exception as ex:
+        print(ex)
+        raise ex
+        return
+    # response = requests.post(url=_url, json=body)
     print(response.status_code)
     print(response.text)
     return response

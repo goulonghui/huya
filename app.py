@@ -56,7 +56,7 @@ def upload_file():
             users = []
             for row in sheet.iter_rows(min_row=2):
                 for col in row:
-                    users.append({"user_id": col.value})
+                    users.append({"user_id": str(col.value).strip()})
             db.clear_user()
             db.bulk_create_user(users)
             return "批量替换账号id成功"
