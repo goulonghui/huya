@@ -23,6 +23,7 @@ docker/docker-compose.yaml、start.sh、stop.sh
 ```shell script
   chmod 755 start.sh
   chmod 755 stop.sh
+  chmod 755 restart.sh
 ```
  
 ####5. 启动服务

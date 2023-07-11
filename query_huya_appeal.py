@@ -19,7 +19,7 @@ class HuYa:
     huya_code = {
         "normal": [0],
         "need_proxy": [210003],
-        "need_notify": [90013, 90030]
+        "need_notify": [90013, 90030, 90024]
     }
 
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "email_template")
