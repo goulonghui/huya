@@ -15,8 +15,8 @@
 ####3. 获取代码仓库脚本
 ```
 把仓库的
-docker/docker-compose.yaml、start.sh、stop.sh 
-放到/root
+docker/docker-compose.yaml、start.sh、stop.sh、restart.sh 
+放到/root/huya_app
 ```
 
 ####4. 修改执行权限 
